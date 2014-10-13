@@ -1,0 +1,2 @@
+defmodule Mojoauth do
+end

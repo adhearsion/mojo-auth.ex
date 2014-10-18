@@ -9,32 +9,38 @@ defmodule MojoAuth do
 
   ## Examples
 
+      # Simple credentials test :ok
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(secret: secret)
       iex> MojoAuth.test_credentials(credentials, secret)
       {:ok, nil}
 
+      # Forged credentials test :invalid
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(secret: secret)
       iex> MojoAuth.test_credentials([username: 'foobar', password: credentials[:password]], secret)
       {:invalid}
 
+      # Credentials expire after default TTL of 1 day
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(secret: secret)
       iex> use Timex
       iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.convert(:secs)) # Pretend it's the future
       {:expired, nil}
 
+      # Credentials can assert an identity
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(id: "foobar", secret: secret)
       iex> MojoAuth.test_credentials(credentials, secret)
       {:ok, "foobar"}
 
+      # Forged credentials test :invalid
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(id: "doodah", secret: secret)
       iex> MojoAuth.test_credentials([username: 'foobar', password: credentials[:password]], secret)
       {:invalid}
 
+      # Credentials expire after default TTL of 1 day
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(id: "foobar", secret: secret)
       iex> use Timex

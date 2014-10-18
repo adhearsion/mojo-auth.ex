@@ -44,8 +44,7 @@ defmodule MojoAuth do
 
   @doc "Create a new set of credentials for an asserted ID, given a desired TTL and shared secret"
   def create_credentials(id: id, secret: secret) do
-    expiry_timestamp = now |> Date.shift(secs: @default_ttl) |> Date.convert(:secs)
-    username = Enum.join([expiry_timestamp, id], @username_separator)
+    username = new_username(id)
     [username: username, password: sign(username, secret)]
   end
   def create_credentials(secret: secret) do
@@ -56,8 +55,8 @@ defmodule MojoAuth do
   def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.convert(:secs)) do
     case sign(username, secret) do
       ^password ->
-        [expiry, id] = String.split(username, @username_separator)
-        {status(expiry, timestamp), (if id == "", do: nil, else: id)}
+        [expiry, id] = username_elements(username)
+        {status(String.to_integer(expiry), timestamp), id}
       _ ->
         {:invalid}
     end
@@ -71,10 +70,20 @@ defmodule MojoAuth do
     Date.now |> Date.universal
   end
 
+  defp status(expiry, timestamp) when expiry > timestamp do
+    :ok
+  end
   defp status(expiry, timestamp) do
-    case String.to_integer(expiry) > timestamp do
-      true -> :ok
-      false -> :expired
-    end
+    :expired
+  end
+
+  defp username_elements(username) do
+    [expiry, id] = String.split(username, @username_separator)
+    [expiry, (if id == "", do: nil, else: id)]
+  end
+
+  defp new_username(id) do
+    expiry_timestamp = now |> Date.shift(secs: @default_ttl) |> Date.convert(:secs)
+    Enum.join([expiry_timestamp, id], @username_separator)
   end
 end

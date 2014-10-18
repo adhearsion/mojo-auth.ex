@@ -53,11 +53,10 @@ defmodule MojoAuth do
   end
 
   @doc "Test that credentials are valid and current"
-  def test_credentials(credentials, secret, timestamp \\ now |> Date.convert(:secs)) do
-    password = credentials[:password]
-    case sign(credentials[:username], secret) do
+  def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.convert(:secs)) do
+    case sign(username, secret) do
       ^password ->
-        case String.split(credentials[:username], @username_separator, trim: true) do
+        case String.split(username, @username_separator, trim: true) do
           [expiry, id] ->
             {status(expiry, timestamp), id}
           [expiry] ->

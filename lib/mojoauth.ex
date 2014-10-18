@@ -18,7 +18,7 @@ defmodule MojoAuth do
       # Forged credentials test :invalid
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(secret: secret)
-      iex> MojoAuth.test_credentials([username: 'foobar', password: credentials[:password]], secret)
+      iex> MojoAuth.test_credentials([username: "foobar", password: credentials[:password]], secret)
       {:invalid}
 
       # Credentials expire after default TTL of 1 day
@@ -37,7 +37,7 @@ defmodule MojoAuth do
       # Forged credentials test :invalid
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(id: "doodah", secret: secret)
-      iex> MojoAuth.test_credentials([username: 'foobar', password: credentials[:password]], secret)
+      iex> MojoAuth.test_credentials([username: "foobar", password: credentials[:password]], secret)
       {:invalid}
 
       # Credentials expire after default TTL of 1 day

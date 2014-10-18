@@ -54,6 +54,6 @@ defmodule MojoAuth do
   end
 
   defp sign(message, secret) do
-    :base64.encode(:crypto.hmac(:sha, secret, message))
+    :crypto.hmac(:sha, secret, message) |> :base64.encode
   end
 end

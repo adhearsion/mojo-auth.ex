@@ -1,6 +1,8 @@
 defmodule MojoAuth do
-  @doc ~S"""
-  Create a new set of credentials for an asserted ID, given a desired TTL and shared secret
+  use Timex
+
+  @moduledoc ~S"""
+  Create and verify MojoAuth credentials
 
   ## Examples
 
@@ -24,6 +26,8 @@ defmodule MojoAuth do
       iex> MojoAuth.test_credentials([username: 'foobar', password: credentials[:password]], secret)
       {:invalid}
   """
+
+  @doc "Create a new set of credentials for an asserted ID, given a desired TTL and shared secret"
   def create_credentials(id: id, secret: secret) do
     username = Enum.join(["foobar", id], ":")
     [username: username, password: sign(username, secret)]

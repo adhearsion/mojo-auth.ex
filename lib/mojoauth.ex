@@ -1,6 +1,8 @@
 defmodule MojoAuth do
   use Timex
 
+  @username_separator ":"
+
   @moduledoc ~S"""
   Create and verify MojoAuth credentials
 
@@ -29,7 +31,7 @@ defmodule MojoAuth do
 
   @doc "Create a new set of credentials for an asserted ID, given a desired TTL and shared secret"
   def create_credentials(id: id, secret: secret) do
-    username = Enum.join(["foobar", id], ":")
+    username = Enum.join(["foobar", id], @username_separator)
     [username: username, password: sign(username, secret)]
   end
   def create_credentials(secret: secret) do
@@ -40,7 +42,7 @@ defmodule MojoAuth do
     password = credentials[:password]
     case sign(credentials[:username], secret) do
       ^password ->
-        case String.split(credentials[:username], ":", trim: true) do
+        case String.split(credentials[:username], @username_separator, trim: true) do
           [expiry, id] ->
             {:ok, id}
           [expiry] ->

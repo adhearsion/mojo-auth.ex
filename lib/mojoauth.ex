@@ -28,6 +28,13 @@ defmodule MojoAuth do
       iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.convert(:secs)) # Pretend it's the future
       {:expired, nil}
 
+      # Credentials expire after a custom TTL
+      iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
+      iex> credentials = MojoAuth.create_credentials(ttl: 200, secret: secret)
+      iex> use Timex
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.convert(:secs)) # Pretend it's the future
+      {:expired, nil}
+
       # Credentials can assert an identity
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(id: "foobar", secret: secret)
@@ -46,12 +53,25 @@ defmodule MojoAuth do
       iex> use Timex
       iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.convert(:secs)) # Pretend it's the future
       {:expired, "foobar"}
+
+      # Credentials expire after a custom TTL
+      iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
+      iex> credentials = MojoAuth.create_credentials(id: "foobar", ttl: 200, secret: secret)
+      iex> use Timex
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.convert(:secs)) # Pretend it's the future
+      {:expired, "foobar"}
   """
 
   @doc "Create a new set of credentials for an asserted ID, given a desired TTL and shared secret"
-  def create_credentials(id: id, secret: secret) do
-    username = new_username(id)
+  def create_credentials(id: id, ttl: ttl, secret: secret) do
+    username = new_username(id, ttl)
     [username: username, password: sign(username, secret)]
+  end
+  def create_credentials(id: id, secret: secret) do
+    create_credentials(id: id, ttl: @default_ttl, secret: secret)
+  end
+  def create_credentials(ttl: ttl, secret: secret) do
+    create_credentials(id: nil, ttl: ttl, secret: secret)
   end
   def create_credentials(secret: secret) do
     create_credentials(id: nil, secret: secret)
@@ -89,8 +109,8 @@ defmodule MojoAuth do
     end
   end
 
-  defp new_username(id) do
-    expiry_timestamp = now |> Date.shift(secs: @default_ttl) |> Date.convert(:secs)
+  defp new_username(id, ttl) do
+    expiry_timestamp = now |> Date.shift(secs: ttl) |> Date.convert(:secs)
     Enum.join([expiry_timestamp, id], @username_separator)
   end
 end

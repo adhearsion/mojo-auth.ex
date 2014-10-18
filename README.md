@@ -16,24 +16,23 @@ Simply run `mix compile`.
 ## Usage
 
 ```elixir
-% Generate a shared secret
-iex> secret = MojoAuth.create_secret
-"eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
+# Generate a shared secret
+iex(1)> secret = MojoAuth.create_secret
+"y662KxTm1X4DvVCml+witUgwdJkNbR013JvFFUy6ZxuWozjHwND6vlIREoylJBh/9TiuSMpBqluNekWqN7kaPg=="
 
-% Create temporary credentials
-iex> credentials = MojoAuth.create_credentials(id: "foobar", secret: secret)
-[{:username,"1412629132:foobar"},
- {:password,"Q1RegXu0oYtm1UYqxRkegilugeM="}]
+# Create temporary credentials
+iex(2)> credentials = MojoAuth.create_credentials(id: "foobar", secret: secret)
+[username: "1413748361:foobar", password: "sJgD0PLv892CUSfp1HL2td5NEeM="]
 
-% Test credentials
-iex> MojoAuth.test_credentials([username: "1412629132:foobar", password: "Q1RegXu0oYtm1UYqxRkegilugeM="], secret)
+# Test credentials
+iex(3)> MojoAuth.test_credentials(credentials, secret)
 {:ok, "foobar"}
-iex> MojoAuth.test_credentials([username: "1412629132:foobar", password: "wrongpassword"], secret)
-{:invalid}
+iex(4)> MojoAuth.test_credentials([username: "1412629132:foobar", password: "wrongpassword"], secret)
+{:invalid, "foobar"}
 
-% 1 day later
-iex> MojoAuth.test_credentials([username: "1412629132:foobar", password: "Q1RegXu0oYtm1UYqxRkegilugeM="], secret)
-{:expired}
+# 1 day later
+iex(5)> MojoAuth.test_credentials(credentials, secret)
+{:expired, "foobar"}
 ```
 
 ## Contributing

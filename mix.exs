@@ -25,6 +25,6 @@ defmodule Mojoauth.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    []
+    [{:timex, "~> 0.12.9"}]
   end
 end

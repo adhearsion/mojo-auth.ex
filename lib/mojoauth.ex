@@ -21,6 +21,12 @@ defmodule MojoAuth do
       iex> MojoAuth.test_credentials([username: "foobar", password: credentials[:password]], secret)
       {:invalid, nil}
 
+      # Wrong secret tests :invalid
+      iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
+      iex> credentials = MojoAuth.create_credentials(secret: secret)
+      iex> MojoAuth.test_credentials(credentials, "wrongsecret")
+      {:invalid, nil}
+
       # Credentials expire after default TTL of 1 day
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(secret: secret)
@@ -45,6 +51,12 @@ defmodule MojoAuth do
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(id: "doodah", secret: secret)
       iex> MojoAuth.test_credentials([username: "sometime:foobar", password: credentials[:password]], secret)
+      {:invalid, "foobar"}
+
+      # Wrong secret tests :invalid
+      iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
+      iex> credentials = MojoAuth.create_credentials(id: "foobar", secret: secret)
+      iex> MojoAuth.test_credentials(credentials, "wrongsecret")
       {:invalid, "foobar"}
 
       # Credentials expire after default TTL of 1 day

@@ -115,7 +115,7 @@ defmodule MojoAuth do
   defp status(expiry, timestamp) when expiry > timestamp do
     :ok
   end
-  defp status(expiry, timestamp) do
+  defp status(_, _) do
     :expired
   end
 

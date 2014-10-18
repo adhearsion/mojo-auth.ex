@@ -19,7 +19,7 @@ defmodule MojoAuth do
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(secret: secret)
       iex> MojoAuth.test_credentials([username: "foobar", password: credentials[:password]], secret)
-      {:invalid}
+      {:invalid, nil}
 
       # Credentials expire after default TTL of 1 day
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
@@ -37,8 +37,8 @@ defmodule MojoAuth do
       # Forged credentials test :invalid
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
       iex> credentials = MojoAuth.create_credentials(id: "doodah", secret: secret)
-      iex> MojoAuth.test_credentials([username: "foobar", password: credentials[:password]], secret)
-      {:invalid}
+      iex> MojoAuth.test_credentials([username: "sometime:foobar", password: credentials[:password]], secret)
+      {:invalid, "foobar"}
 
       # Credentials expire after default TTL of 1 day
       iex> secret = "eN1lvHK7cXPYFNwmEwZ3QNMAiCC651E5ikuEOj7+k4EMYTXb3XxXo3iBw4ScxqzJ+aH6aDCCe++LPVGRjgfl3Q=="
@@ -60,12 +60,11 @@ defmodule MojoAuth do
   @doc "Test that credentials are valid and current"
   def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.convert(:secs)) do
     [expiry, id] = username_elements(username)
-    case sign(username, secret) do
-      ^password ->
-        {status(String.to_integer(expiry), timestamp), id}
-      _ ->
-        {:invalid}
+    status = case sign(username, secret) do
+      ^password -> status(String.to_integer(expiry), timestamp)
+      _ -> :invalid
     end
+    {status, id}
   end
 
   defp sign(message, secret) do

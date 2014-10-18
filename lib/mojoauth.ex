@@ -56,12 +56,8 @@ defmodule MojoAuth do
   def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.convert(:secs)) do
     case sign(username, secret) do
       ^password ->
-        case String.split(username, @username_separator, trim: true) do
-          [expiry, id] ->
-            {status(expiry, timestamp), id}
-          [expiry] ->
-            {status(expiry, timestamp), nil}
-        end
+        [expiry, id] = String.split(username, @username_separator)
+        {status(expiry, timestamp), (if id == "", do: nil, else: id)}
       _ ->
         {:invalid}
     end

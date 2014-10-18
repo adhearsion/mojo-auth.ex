@@ -4,6 +4,7 @@ otp_release:
 before_install:
    - git clone --branch v1.0.1 https://github.com/elixir-lang/elixir
    - make -C elixir
-   - mix deps.get
-before_script: "export PATH=`pwd`/elixir/bin:$PATH"
+before_script:
+  - "export PATH=`pwd`/elixir/bin:$PATH"
+  - mix deps.get
 script: mix test

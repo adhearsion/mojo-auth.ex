@@ -47,7 +47,7 @@ defmodule Mojoauth.Mixfile do
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/mojolingo/mojo-auth.ex",
-        "Docs" => "http://mojolingo.github.io/mojo-auth.ex"
+        "Docs" => "http://hexdocs.pm/mojoauth/"
       }
     ]
   end

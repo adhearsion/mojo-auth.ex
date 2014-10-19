@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>README</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+    <script type="text/javascript" charset="utf-8">
+      relpath = '';
+      if (relpath != '') relpath += '/';
+    </script>
+
+    <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+    <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+  </head>
+
+  <body>
+    <script type="text/javascript" charset="utf-8">
+      if (window.top.frames.main) document.body.className = 'frames';
+    </script>
+
+    <div id="content">
+      <div class="breadcrumbs">mojoauth v0.1.0 &rarr; <a href="readme.html">README</a></div>
+      <p><a href="http://travis-ci.org/mojolingo/mojo-auth.ex"><img src="https://travis-ci.org/mojolingo/mojo-auth.ex.svg?branch=develop" alt="Build Status"/></a></p>
+<h1>mojoauth</h1>
+<p><a href="http://mojolingo.com/mojoauth">MojoAuth</a> is a set of standard approaches to cross-app authentication based on <a href="http://en.wikipedia.org/wiki/Hash-based_message_authentication_code">Hash-based Message Authentication Codes</a> (HMAC), inspired by <a href="http://tools.ietf.org/html/draft-uberti-behave-turn-rest">“A REST API For Access To TURN Services”</a>.</p>
+<h2>Dependencies</h2>
+<ul>
+<li>elixir
+</li>
+<li>mix
+</li>
+</ul>
+<h2>Building</h2>
+<p>Simply run <code class="inline">mix compile</code>.</p>
+<h2>Usage</h2>
+<pre><code class="elixir"># Generate a shared secret
+iex(1)&gt; secret = MojoAuth.create_secret
+&quot;y662KxTm1X4DvVCml+witUgwdJkNbR013JvFFUy6ZxuWozjHwND6vlIREoylJBh/9TiuSMpBqluNekWqN7kaPg==&quot;
+
+# Create temporary credentials
+iex(2)&gt; credentials = MojoAuth.create_credentials(id: &quot;foobar&quot;, secret: secret)
+[username: &quot;1413748361:foobar&quot;, password: &quot;sJgD0PLv892CUSfp1HL2td5NEeM=&quot;]
+
+# Test credentials
+iex(3)&gt; MojoAuth.test_credentials(credentials, secret)
+{:ok, &quot;foobar&quot;}
+iex(4)&gt; MojoAuth.test_credentials([username: &quot;1412629132:foobar&quot;, password: &quot;wrongpassword&quot;], secret)
+{:invalid, &quot;foobar&quot;}
+
+# 1 day later
+iex(5)&gt; MojoAuth.test_credentials(credentials, secret)
+{:expired, &quot;foobar&quot;}</code></pre>
+<h2>Contributing</h2>
+<ol>
+<li><a href="https://github.com/mojolingo/mojo-auth.ex/fork">Fork it</a>
+</li>
+<li>Create your feature branch (<code class="inline">git checkout -b my-new-feature</code>)
+</li>
+<li>Commit your changes (<code class="inline">git commit -am 'Add some feature'</code>)
+</li>
+<li>Push to the branch (<code class="inline">git push origin my-new-feature</code>)
+</li>
+<li>Create a new Pull Request
+</li>
+</ol>
+
+    </div>
+  </body>
+</html>

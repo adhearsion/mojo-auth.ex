@@ -75,11 +75,19 @@ defmodule MojoAuth do
   """
 
   @doc "Create a new random secret"
+  @spec create_secret :: binary
   def create_secret do
     :crypto.strong_rand_bytes(64) |> :base64.encode
   end
 
-  @doc "Create a new set of credentials for an asserted ID, given a desired TTL and shared secret"
+  @doc ~S"""
+    Create a new set of credentials for an asserted ID, given a desired TTL and shared secret
+
+    Takes any of the following options, where `secret` is required:
+    * `secret`: The shared secret with which to hash the credentials.
+    * `id`: An arbitrary ID string to assert in the created credentials.
+    * `ttl`: The number of seconds for which the credentials should be valid. Defaults to 1 day (86400 seconds).
+  """
   def create_credentials(id: id, ttl: ttl, secret: secret) do
     username = new_username(id, ttl)
     [username: username, password: sign(username, secret)]
@@ -94,7 +102,12 @@ defmodule MojoAuth do
     create_credentials(id: nil, secret: secret)
   end
 
-  @doc "Test that credentials are valid and current"
+  @doc ~S"""
+    Test that credentials are valid and current.
+
+    Takes a credentials list as produced by `create_credentials`, a secret, and optionally a timestamp against which to validate expiry (defaults to the current time).
+  """
+  @spec test_credentials([username: binary, password: binary], binary, binary) :: {atom, binary}
   def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.convert(:secs)) do
     [expiry, id] = username_elements(username)
     status = case sign(username, secret) do

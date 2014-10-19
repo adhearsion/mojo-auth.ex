@@ -2,12 +2,17 @@ defmodule Mojoauth.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :mojoauth,
-     version: "0.1.0",
-     elixir: "~> 1.0.0",
-     deps: deps,
-     description: "MojoAuth is a set of standard approaches to cross-app authentication based on HMAC.",
-     package: package,
+    [
+      app: :mojoauth,
+      version: "0.1.0",
+      elixir: "~> 1.0.0",
+      deps: deps,
+      description: "MojoAuth is a set of standard approaches to cross-app authentication based on HMAC.",
+      package: package,
+      name: "mojoauth",
+      source_url: "https://github.com/mojolingo/mojo-auth.ex",
+      homepage_url: "http://mojolingo.github.io/mojoauth",
+      docs: docs,
     ]
   end
 
@@ -28,7 +33,11 @@ defmodule Mojoauth.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [{:timex, "~> 0.12.9"}]
+    [
+      {:timex, "~> 0.12.9"},
+      {:earmark, "~> 0.1", only: :dev},
+      {:ex_doc, "~> 0.6", only: :dev},
+    ]
   end
 
   defp package do
@@ -42,4 +51,11 @@ defmodule Mojoauth.Mixfile do
       }
     ]
   end
+
+  defp docs do
+    [
+      readme: true,
+    ]
+  end
+
 end

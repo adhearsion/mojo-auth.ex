@@ -11,7 +11,7 @@ defmodule Mojoauth.Mixfile do
       package: package,
       name: "mojoauth",
       source_url: "https://github.com/mojolingo/mojo-auth.ex",
-      homepage_url: "http://mojolingo.github.io/mojoauth",
+      homepage_url: "http://mojoauth.mojolingo.com",
       docs: docs,
     ]
   end

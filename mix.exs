@@ -5,7 +5,7 @@ defmodule Mojoauth.Mixfile do
     [
       app: :mojoauth,
       version: "0.1.0",
-      elixir: "~> 1.0.0",
+      elixir: "~> 1.0",
       deps: deps,
       description: "MojoAuth is a set of standard approaches to cross-app authentication based on HMAC.",
       package: package,
@@ -34,7 +34,8 @@ defmodule Mojoauth.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:timex, "~> 0.12.9"},
+      {:timex, "~> 0.19.5"},
+      {:tzdata, "== 0.1.8", override: true},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.6", only: :dev},
     ]

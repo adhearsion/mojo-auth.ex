@@ -31,14 +31,14 @@ defmodule MojoAuth do
       iex> secret = MojoAuth.create_secret
       iex> credentials = MojoAuth.create_credentials(secret: secret)
       iex> use Timex
-      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.convert(:secs)) # Pretend it's the future
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.to_secs) # Pretend it's the future
       {:expired, nil}
 
       # Credentials expire after a custom TTL
       iex> secret = MojoAuth.create_secret
       iex> credentials = MojoAuth.create_credentials(ttl: 200, secret: secret)
       iex> use Timex
-      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.convert(:secs)) # Pretend it's the future
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.to_secs) # Pretend it's the future
       {:expired, nil}
 
       # Credentials can assert an identity
@@ -63,14 +63,14 @@ defmodule MojoAuth do
       iex> secret = MojoAuth.create_secret
       iex> credentials = MojoAuth.create_credentials(id: "foobar", secret: secret)
       iex> use Timex
-      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.convert(:secs)) # Pretend it's the future
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.to_secs) # Pretend it's the future
       {:expired, "foobar"}
 
       # Credentials expire after a custom TTL
       iex> secret = MojoAuth.create_secret
       iex> credentials = MojoAuth.create_credentials(id: "foobar", ttl: 200, secret: secret)
       iex> use Timex
-      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.convert(:secs)) # Pretend it's the future
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.to_secs) # Pretend it's the future
       {:expired, "foobar"}
   """
 
@@ -108,7 +108,7 @@ defmodule MojoAuth do
     Takes a credentials list as produced by `create_credentials`, a secret, and optionally a timestamp against which to validate expiry (defaults to the current time).
   """
   @spec test_credentials([username: binary, password: binary], binary, binary) :: {atom, binary}
-  def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.convert(:secs)) do
+  def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.to_secs) do
     [expiry, id] = username_elements(username)
     status = case sign(username, secret) do
       ^password -> status(String.to_integer(expiry), timestamp)
@@ -140,7 +140,7 @@ defmodule MojoAuth do
   end
 
   defp new_username(id, ttl) do
-    expiry_timestamp = now |> Date.shift(secs: ttl) |> Date.convert(:secs)
+    expiry_timestamp = now |> Date.shift(secs: ttl) |> Date.to_secs
     Enum.join([expiry_timestamp, id], @username_separator)
   end
 end

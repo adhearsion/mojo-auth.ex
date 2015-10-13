@@ -38,6 +38,7 @@ defmodule Mojoauth.Mixfile do
       {:tzdata, "== 0.1.8", override: true},
       {:earmark, "~> 0.1", only: :dev},
       {:ex_doc, "~> 0.6", only: :dev},
+      {:mix_test_watch, "~> 0.2", only: :dev},
     ]
   end
 

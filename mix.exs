@@ -4,7 +4,7 @@ defmodule Mojoauth.Mixfile do
   def project do
     [
       app: :mojoauth,
-      version: "0.1.0",
+      version: "1.0.0",
       elixir: "~> 1.0",
       deps: deps,
       description: "MojoAuth is a set of standard approaches to cross-app authentication based on HMAC.",

@@ -3,6 +3,7 @@
 * Added documentation
 * Permit Elixir 1.x
 * Build environment free of Ruby
+* Updated dependencies
 
 # 0.1.0
 

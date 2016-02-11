@@ -20,7 +20,7 @@ defmodule Mojoauth.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :timex]]
   end
 
   # Dependencies can be Hex packages:
@@ -34,9 +34,8 @@ defmodule Mojoauth.Mixfile do
   # Type `mix help deps` for more examples and options
   defp deps do
     [
-      {:timex, "~> 0.19.5"},
-      {:tzdata, "== 0.1.8", override: true},
-      {:earmark, "~> 0.1", only: :dev},
+      {:timex, "~> 1.0"},
+      {:earmark, "~> 0.2", only: :dev},
       {:ex_doc, "~> 0.6", only: :dev},
       {:mix_test_watch, "~> 0.2", only: :dev},
     ]

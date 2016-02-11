@@ -1,5 +1,7 @@
 # develop
 
+* Fixed the documentation - now renders docs!
+
 # 1.0.1
 
 * Fixed deprecated Hex config for successful release

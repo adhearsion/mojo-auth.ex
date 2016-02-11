@@ -56,7 +56,7 @@ defmodule Mojoauth.Mixfile do
   defp docs do
     [
       readme: true,
-      main: "readme",
+      main: "MojoAuth",
     ]
   end
 

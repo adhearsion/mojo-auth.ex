@@ -2,12 +2,17 @@ defmodule Mojoauth.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :mojoauth,
-     version: "0.1.0",
-     elixir: "~> 1.0.0",
-     deps: deps,
-     description: "MojoAuth is a set of standard approaches to cross-app authentication based on HMAC.",
-     package: package,
+    [
+      app: :mojoauth,
+      version: "1.0.0",
+      elixir: "~> 1.0",
+      deps: deps,
+      description: "MojoAuth is a set of standard approaches to cross-app authentication based on HMAC.",
+      package: package,
+      name: "mojoauth",
+      source_url: "https://github.com/adhearsion/mojo-auth.ex",
+      homepage_url: "http://mojoauth.mojolingo.com",
+      docs: docs,
     ]
   end
 
@@ -15,7 +20,7 @@ defmodule Mojoauth.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger, :timex]]
   end
 
   # Dependencies can be Hex packages:
@@ -28,7 +33,12 @@ defmodule Mojoauth.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [{:timex, "~> 0.12.9"}]
+    [
+      {:timex, "~> 1.0"},
+      {:earmark, "~> 0.2", only: :dev},
+      {:ex_doc, "~> 0.6", only: :dev},
+      {:mix_test_watch, "~> 0.2", only: :dev},
+    ]
   end
 
   defp package do
@@ -37,9 +47,17 @@ defmodule Mojoauth.Mixfile do
       contributors: ["Ben Langfeld"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/mojolingo/mojo-auth.ex",
-        "Docs" => "http://mojolingo.github.io/mojo-auth.ex"
+        "GitHub" => "https://github.com/adhearsion/mojo-auth.ex",
+        "Docs" => "http://hexdocs.pm/mojoauth/"
       }
     ]
   end
+
+  defp docs do
+    [
+      readme: true,
+      main: "readme",
+    ]
+  end
+
 end

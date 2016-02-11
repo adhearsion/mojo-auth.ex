@@ -31,14 +31,14 @@ defmodule MojoAuth do
       iex> secret = MojoAuth.create_secret
       iex> credentials = MojoAuth.create_credentials(secret: secret)
       iex> use Timex
-      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.convert(:secs)) # Pretend it's the future
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.to_secs) # Pretend it's the future
       {:expired, nil}
 
       # Credentials expire after a custom TTL
       iex> secret = MojoAuth.create_secret
       iex> credentials = MojoAuth.create_credentials(ttl: 200, secret: secret)
       iex> use Timex
-      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.convert(:secs)) # Pretend it's the future
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.to_secs) # Pretend it's the future
       {:expired, nil}
 
       # Credentials can assert an identity
@@ -63,23 +63,31 @@ defmodule MojoAuth do
       iex> secret = MojoAuth.create_secret
       iex> credentials = MojoAuth.create_credentials(id: "foobar", secret: secret)
       iex> use Timex
-      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.convert(:secs)) # Pretend it's the future
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(days: 1, secs: 1) |> Date.to_secs) # Pretend it's the future
       {:expired, "foobar"}
 
       # Credentials expire after a custom TTL
       iex> secret = MojoAuth.create_secret
       iex> credentials = MojoAuth.create_credentials(id: "foobar", ttl: 200, secret: secret)
       iex> use Timex
-      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.convert(:secs)) # Pretend it's the future
+      iex> MojoAuth.test_credentials(credentials, secret, Date.now |> Date.universal |> Date.shift(secs: 201) |> Date.to_secs) # Pretend it's the future
       {:expired, "foobar"}
   """
 
   @doc "Create a new random secret"
+  @spec create_secret :: binary
   def create_secret do
     :crypto.strong_rand_bytes(64) |> :base64.encode
   end
 
-  @doc "Create a new set of credentials for an asserted ID, given a desired TTL and shared secret"
+  @doc ~S"""
+    Create a new set of credentials for an asserted ID, given a desired TTL and shared secret
+
+    Takes any of the following options, where `secret` is required:
+    * `secret`: The shared secret with which to hash the credentials.
+    * `id`: An arbitrary ID string to assert in the created credentials.
+    * `ttl`: The number of seconds for which the credentials should be valid. Defaults to 1 day (86400 seconds).
+  """
   def create_credentials(id: id, ttl: ttl, secret: secret) do
     username = new_username(id, ttl)
     [username: username, password: sign(username, secret)]
@@ -94,8 +102,13 @@ defmodule MojoAuth do
     create_credentials(id: nil, secret: secret)
   end
 
-  @doc "Test that credentials are valid and current"
-  def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.convert(:secs)) do
+  @doc ~S"""
+    Test that credentials are valid and current.
+
+    Takes a credentials list as produced by `create_credentials`, a secret, and optionally a timestamp against which to validate expiry (defaults to the current time).
+  """
+  @spec test_credentials([username: binary, password: binary], binary, binary) :: {atom, binary}
+  def test_credentials([username: username, password: password], secret, timestamp \\ now |> Date.to_secs) do
     [expiry, id] = username_elements(username)
     status = case sign(username, secret) do
       ^password -> status(String.to_integer(expiry), timestamp)
@@ -127,7 +140,7 @@ defmodule MojoAuth do
   end
 
   defp new_username(id, ttl) do
-    expiry_timestamp = now |> Date.shift(secs: ttl) |> Date.convert(:secs)
+    expiry_timestamp = now |> Date.shift(secs: ttl) |> Date.to_secs
     Enum.join([expiry_timestamp, id], @username_separator)
   end
 end

@@ -1,6 +1,10 @@
 # develop
 
-# 0.1.0
+# 1.0.1
+
+* Fixed deprecated Hex config for successful release
+
+# 1.0.0
 
 * Added documentation
 * Permit Elixir 1.x

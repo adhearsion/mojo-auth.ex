@@ -4,7 +4,7 @@ defmodule Mojoauth.Mixfile do
   def project do
     [
       app: :mojoauth,
-      version: "1.0.0",
+      version: "1.0.1",
       elixir: "~> 1.0",
       deps: deps,
       description: "MojoAuth is a set of standard approaches to cross-app authentication based on HMAC.",
@@ -44,7 +44,7 @@ defmodule Mojoauth.Mixfile do
   defp package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*", "CHANGELOG*"],
-      contributors: ["Ben Langfeld"],
+      maintainers: ["Ben Langfeld"],
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/adhearsion/mojo-auth.ex",

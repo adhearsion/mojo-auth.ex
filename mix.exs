@@ -44,7 +44,7 @@ defmodule Mojoauth.Mixfile do
   defp package do
     [
       files: ["lib", "mix.exs", "README*", "LICENSE*", "CHANGELOG*"],
-      contributors: ["Ben Langfeld"],
+      maintainers: ["Ben Langfeld"],
       licenses: ["MIT"],
       links: %{
         "GitHub" => "https://github.com/adhearsion/mojo-auth.ex",

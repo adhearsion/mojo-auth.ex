@@ -10,7 +10,7 @@ defmodule Mojoauth.Mixfile do
       description: "MojoAuth is a set of standard approaches to cross-app authentication based on HMAC.",
       package: package,
       name: "mojoauth",
-      source_url: "https://github.com/mojolingo/mojo-auth.ex",
+      source_url: "https://github.com/adhearsion/mojo-auth.ex",
       homepage_url: "http://mojoauth.mojolingo.com",
       docs: docs,
     ]
@@ -48,7 +48,7 @@ defmodule Mojoauth.Mixfile do
       contributors: ["Ben Langfeld"],
       licenses: ["MIT"],
       links: %{
-        "GitHub" => "https://github.com/mojolingo/mojo-auth.ex",
+        "GitHub" => "https://github.com/adhearsion/mojo-auth.ex",
         "Docs" => "http://hexdocs.pm/mojoauth/"
       }
     ]
